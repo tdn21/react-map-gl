@@ -1,37 +1,81 @@
-# Fullscreen Control
+# FullscreenControl
 
-![Since v4.1](https://img.shields.io/badge/since-v4.1-green)
+React component that wraps the base library's `FullscreenControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#fullscreencontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#fullscreencontrol)).
 
-This is a React equivalent of Mapbox's [FullscreenControl](https://www.mapbox.com/mapbox-gl-js/api/#fullscreencontrol).
 
-```js
-import {Component} from 'react';
-import ReactMapGL, {FullscreenControl} from 'react-map-gl';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-class Map extends Component {
-  render() {
-    const {viewport, updateViewport} = this.props;
-    return (
-      <ReactMapGL {...viewport} onViewportChange={updateViewport}>
-        <div style={{position: 'absolute', right: 0}}>
-          <FullscreenControl container={document.querySelector('body')}/>
-        </div>
-      </ReactMapGL>
-    );
-  }
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
+import * as React from 'react';
+import Map, {FullscreenControl} from 'react-map-gl';
+
+function App() {
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    <FullscreenControl />
+  </Map>;
 }
 ```
 
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+```tsx
+import * as React from 'react';
+import Map, {FullscreenControl} from 'react-map-gl/maplibre';
+
+function App() {
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    <FullscreenControl />
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Properties
 
-##### `container` (HTMLElement)
+### Reactive Properties
 
-`container` is the compatible DOM element which should be made full screen. By default, the map container element will be made full screen.
+#### `style`: CSSProperties {#style}
 
-## Styling
+CSS style override that applies to the control's container.
 
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
+
+### Other Properties
+
+The properties in this section are not reactive. They are only used when the component first mounts.
+
+#### `containerId`: string {#containerid}
+
+Id of the DOM element which should be made full screen. By default, the map container element will be made full screen.
+  
+#### `position`: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' {#position}
+
+Default: `'top-right'`
+
+Placement of the control relative to the map.
+
 
 ## Source
-[fullscreen-control.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/fullscreen-control.js)
 
+[fullscreen-control.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/fullscreen-control.ts)

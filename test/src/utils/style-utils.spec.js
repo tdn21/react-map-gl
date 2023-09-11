@@ -1,5 +1,4 @@
-import test from 'tape-catch';
-import {fromJS} from 'immutable';
+import test from 'tape-promise/tape';
 
 import {normalizeStyle} from 'react-map-gl/utils/style-utils';
 
@@ -48,7 +47,10 @@ const testStyle = {
         'line-color': '#efefef',
         'line-width': {
           base: 1.55,
-          stops: [[4, 0.25], [20, 30]]
+          stops: [
+            [4, 0.25],
+            [20, 30]
+          ]
         }
       },
       minzoom: 5,
@@ -72,7 +74,10 @@ const testStyle = {
         'line-color': '#efefef',
         'line-width': {
           base: 2,
-          stops: [[4, 0.5], [20, 40]]
+          stops: [
+            [4, 0.5],
+            [20, 40]
+          ]
         }
       }
     }
@@ -123,7 +128,10 @@ const expectedStyle = {
         'line-color': '#efefef',
         'line-width': {
           base: 1.55,
-          stops: [[4, 0.25], [20, 30]]
+          stops: [
+            [4, 0.25],
+            [20, 30]
+          ]
         }
       },
       minzoom: 5,
@@ -156,7 +164,10 @@ const expectedStyle = {
         'line-color': '#efefef',
         'line-width': {
           base: 2,
-          stops: [[4, 0.5], [20, 40]]
+          stops: [
+            [4, 0.5],
+            [20, 40]
+          ]
         }
       }
     }
@@ -164,6 +175,9 @@ const expectedStyle = {
 };
 
 test('normalizeStyle', t => {
+  // Make sure the style is not mutated
+  freezeRecursive(testStyle);
+
   t.is(normalizeStyle(null), null, 'Handles null');
   t.is(
     normalizeStyle('mapbox://styles/mapbox/light-v9'),
@@ -175,8 +189,25 @@ test('normalizeStyle', t => {
   t.notEqual(result, testStyle, 'style is not mutated');
   t.deepEqual(result, expectedStyle, 'plain object style is normalized');
 
-  result = normalizeStyle(fromJS(testStyle));
+  // Immutable-like object
+  result = normalizeStyle({toJS: () => testStyle});
   t.deepEqual(result, expectedStyle, 'immutable style is normalized');
 
   t.end();
 });
+
+function freezeRecursive(obj) {
+  if (!obj) return;
+  if (typeof obj === 'object') {
+    if (Array.isArray(obj)) {
+      for (const el of obj) {
+        freezeRecursive(el);
+      }
+    } else {
+      for (const key in obj) {
+        freezeRecursive(obj[key]);
+      }
+    }
+    Object.freeze(obj);
+  }
+}

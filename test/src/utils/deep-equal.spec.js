@@ -1,119 +1,93 @@
-import test from 'tape-catch';
-
-import deepEqual from 'react-map-gl/utils/deep-equal';
+import test from 'tape-promise/tape';
+import {deepEqual, arePointsEqual} from 'react-map-gl/utils/deep-equal';
 
 test('deepEqual', t => {
   const testCases = [
     {
-      a: 0,
-      b: 0,
-      isEqual: true
-    },
-    {
-      a: 'a',
-      b: 'b',
-      isEqual: false
-    },
-    {
-      a: 0,
+      a: null,
       b: null,
-      isEqual: false
+      result: true
     },
     {
-      a: {},
-      b: undefined,
-      isEqual: false
+      a: undefined,
+      b: 0,
+      result: false
     },
     {
-      a: [],
-      b: {},
-      isEqual: false
+      a: [1, 2, 3],
+      b: [1, 2, 3],
+      result: true
     },
     {
-      a: [],
-      b: [0],
-      isEqual: false
+      a: [1, 2],
+      b: [1, 2, 3],
+      result: false
     },
     {
-      a: [0],
-      b: [1],
-      isEqual: false
+      a: [1, 2],
+      b: {0: 1, 1: 2},
+      result: false
     },
     {
-      a: [{}],
-      b: [{}],
-      isEqual: true
+      a: {x: 0, y: 0, offset: [1, -1]},
+      b: {x: 0, y: 0, offset: [1, -1]},
+      result: true
     },
     {
-      a: {x: 0},
-      b: {x: 0},
-      isEqual: true
+      a: {x: 0, y: 0},
+      b: {x: 0, y: 0, offset: [1, -1]},
+      result: false
     },
     {
-      a: {x: 0},
-      b: {x: 0, y: 1},
-      isEqual: false
-    },
-    {
-      a: {x: 0},
-      b: {x: 1},
-      isEqual: false
-    },
-    {
-      a: {
-        layout: {
-          'line-cap': 'butt',
-          'line-join': 'miter'
-        },
-        filter: ['all', ['==', '$type', 'LineString']],
-        type: 'line',
-        source: 'mapbox',
-        id: 'tunnel_minor',
-        paint: {
-          'line-color': '#efefef',
-          'line-width': {
-            base: 1.55,
-            stops: [[4, 0.25], [20, 30]]
-          }
-        },
-        'source-layer': 'road'
-      },
-      b: {
-        layout: {
-          'line-cap': 'butt',
-          'line-join': 'miter'
-        },
-        filter: ['all', ['==', '$type', 'LineString']],
-        type: 'line',
-        source: 'mapbox',
-        id: 'tunnel_minor',
-        paint: {
-          'line-color': '#efefef',
-          'line-width': {
-            base: 1.55,
-            stops: [[4, 0.25], [20, 30]]
-          }
-        },
-        'source-layer': 'road'
-      },
-      isEqual: true
+      a: {x: 0, y: 0, z: 0},
+      b: {x: 0, y: 0, offset: [1, -1]},
+      result: false
     }
   ];
 
-  for (const testCase of testCases) {
-    const aStr = JSON.stringify(testCase.a);
-    const bStr = JSON.stringify(testCase.b);
-    t.is(
-      deepEqual(testCase.a, testCase.b),
-      testCase.isEqual,
-      `${aStr} is ${testCase.isEqual ? 'equal' : 'not equal'} to ${bStr}`
-    );
-    if (!testCase.isEqual) {
-      t.is(
-        deepEqual(testCase.b, testCase.a),
-        testCase.isEqual,
-        `${bStr} is ${testCase.isEqual ? 'equal' : 'not equal'} to ${aStr}`
-      );
+  for (const {a, b, result} of testCases) {
+    t.is(deepEqual(a, b), result, `${JSON.stringify(a)} vs ${JSON.stringify(b)}`);
+    if (a !== b) {
+      t.is(deepEqual(b, a), result, `${JSON.stringify(b)} vs ${JSON.stringify(a)}`);
+    }
+  }
+
+  t.end();
+});
+
+test('arePointsEqual', t => {
+  const testCases = [
+    {
+      a: undefined,
+      b: undefined,
+      result: true
+    },
+    {
+      a: undefined,
+      b: [0, 0],
+      result: true
+    },
+    {
+      a: undefined,
+      b: [0, 1],
+      result: false
+    },
+    {
+      a: undefined,
+      b: [1, 0],
+      result: false
+    },
+    {
+      a: {x: 1, y: 1},
+      b: [1, 1],
+      result: true
+    }
+  ];
+
+  for (const {a, b, result} of testCases) {
+    t.is(arePointsEqual(a, b), result, `${JSON.stringify(a)}, ${JSON.stringify(b)}`);
+    if (a !== b) {
+      t.is(arePointsEqual(b, a), result, `${JSON.stringify(b)}, ${JSON.stringify(a)}`);
     }
   }
 

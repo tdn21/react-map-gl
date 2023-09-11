@@ -1,34 +1,38 @@
-// prettier-ignore
-module.exports = {
-  parser: 'babel-eslint',
-  plugins: ['flowtype', 'react'],
-  extends: ['uber-jsx', 'uber-es2015', 'prettier', 'prettier/react', 'prettier/flowtype', 'plugin:import/errors', 'plugin:flowtype/recommended'],
-  overrides: [{
-    files: ['*.spec.js', 'webpack.config.js', '**/bundle/*.js'],
+const {getESLintConfig} = require('ocular-dev-tools/configuration');
+
+module.exports = getESLintConfig({
+  react: '16.8.2',
+  overrides: {
+    parserOptions: {
+      project: ['./tsconfig.json'],
+      ecmaVersion: 2020
+    },
+
     rules: {
-      'import/no-extraneous-dependencies': 0
-    }
-  }],
-  settings: {
-    'import/core-modules': [
-      'math.gl',
-      'viewport-mercator-project'
-    ],
-    react: {
-      version: 'detect'
-    }
-  },
-  rules: {
-    'guard-for-in': 0,
-    'no-inline-comments': 0,
-    'no-invalid-this': 0,
-    camelcase: 0,
-    'react/forbid-prop-types': 0,
-    'react/no-deprecated': 0,
-    'import/no-unresolved': ['error', {ignore: ['test']}],
-    'import/no-extraneous-dependencies': ['error', {devDependencies: false, peerDependencies: true}]
-  },
-  parserOptions: {
-    ecmaVersion: 2018
+      'max-depth': ['warn', 4],
+      complexity: ['warn'],
+      'max-statements': ['warn'],
+      'callback-return': 0
+    },
+
+    overrides: [
+      {
+        files: ['**/*.ts', '**/*.tsx', '**/*.d.ts'],
+        rules: {
+          // Gradually enable
+          '@typescript-eslint/ban-ts-comment': 0,
+          '@typescript-eslint/ban-types': 0,
+          '@typescript-eslint/no-unsafe-member-access': 0,
+          '@typescript-eslint/no-unsafe-assignment': 0,
+          'import/named': 0,
+          '@typescript-eslint/no-empty-function': ['warn', {allow: ['arrowFunctions']}],
+          '@typescript-eslint/restrict-template-expressions': 0,
+          '@typescript-eslint/explicit-module-boundary-types': 0,
+          '@typescript-eslint/no-unsafe-return': 0,
+          '@typescript-eslint/no-unsafe-call': 0,
+          '@typescript-eslint/restrict-plus-operands': 0
+        }
+      }
+    ]
   }
-};
+});

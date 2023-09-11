@@ -1,149 +1,216 @@
-# Marker Control
+# Marker
 
-![Since v3.0](https://img.shields.io/badge/since-v3.0-green)
+React component that wraps the base library's `Marker` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#marker)).
 
-This is a React equivalent of Mapbox's
-[Marker Control](https://www.mapbox.com/mapbox-gl-js/api/#marker), which can
-be used to render custom icons at specific locations on the map.
 
-```js
-import {Component} from 'react';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-class Map extends Component {
-  render() {
-    return (
-      <ReactMapGL latitude={37.78} longitude={-122.41} zoom={8}>
-        <Marker latitude={37.78} longitude={-122.41} offsetLeft={-20} offsetTop={-10}>
-          <div>You are here</div>
-        </Marker>
-      </ReactMapGL>
-    );
-  }
-}
-```
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
 
-Performance notes: if a large number of markers are needed, it's generally favorable to cache the `<Marker>` nodes, so that we don't rerender them when the viewport changes.
-
-```js
+```tsx
 import * as React from 'react';
-import {PureComponent} from 'react';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import Map, {Marker} from 'react-map-gl';
 
-const CITIES = [...];
-
-// PureComponent ensures that the markers are only rerendered when data changes
-class Markers extends PureComponent {
-  render() {
-    const {data} = this.props;
-    return data.map(
-      city => <Marker key={city.name} longitude={city.longitude} latitude={city.latitude} ><img src="pin.png" /></Marker>
-    )
-  }
-}
-
-class Map extends PureComponent {
-  state = {
-    viewport: {
-      latitude: 37.78,
-      longitude: -122.41,
-      zoom: 8
-    }
-  };
-
-  render() {
-    return (
-      <ReactMapGL {...this.state.viewport} onViewportChange={viewport => this.setState({viewport})}>
-        <Markers data={CITIES} />
-      </ReactMapGL>
-    );
-  }
+function App() {
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    <Marker longitude={-100} latitude={40} anchor="bottom" >
+      <img src="./pin.png" />
+    </Marker>
+  </Map>;
 }
 ```
 
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import Map, {Marker} from 'react-map-gl/maplibre';
+
+function App() {
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    <Marker longitude={-100} latitude={40} anchor="bottom" >
+      <img src="./pin.png" />
+    </Marker>
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+If `Marker` is mounted with child components, then its content will be rendered to the specified location. If it is mounted with no content, then a default marker will be used.
 
 ## Properties
 
-##### `latitude` (Number, required)
-Latitude of the marker.
+### Reactive Properties
 
-##### `longitude` (Number, required)
-Longitude of the marker.
+#### `draggable`: boolean {#draggable}
 
-##### `offsetLeft` (Number)
+Default: `false`
 
-- default: `0`
+If `true`, the marker is able to be dragged to a new position on the map.
 
-Offset of the marker from the left in pixels, negative number indicates left.
+#### `latitude`: number {#latitude}
 
-##### `offsetTop` (Number)
+Required. The latitude of the anchor location.
 
-- default: `0`
+#### `longitude`: number {#longitude}
 
-Offset of the marker from the top in pixels, negative number indicates up.
+Required. The longitude of the anchor location.
 
-##### `draggable` (Boolean)
+#### `offset`: [PointLike](./types.md#pointlike) {#offset}
 
-- default: `false`
+Default: `null`
 
-Allows this marker component to be dragged around the map. (Use `onDragEnd` to capture the final position and update `longitude` and `latitude`).
+The offset in pixels as a [PointLike](https://docs.mapbox.com/mapbox-gl-js/api/geography/#pointlike) object to apply relative to the element's center. Negatives indicate left and up.
 
-##### `onDragStart` (Function)
+#### `pitchAlignment`: 'map' | 'viewport' | 'auto' {#pitchalignment}
 
-Called when a draggable marker starts being dragged.
+Default: `'auto'`
 
-Parameters:
+- `map` aligns the `Marker` to the plane of the map.
+- `viewport` aligns the `Marker` to the plane of the viewport.
+- `auto` automatically matches the value of `rotationAlignment`.
 
-- `event` - The pointer event.
-  + `event.lngLat` - The geo coordinates where the drag started, as `[lng, lat]`.
+#### `popup`: Popup | null {#popup}
 
-##### `onDrag` (Function)
+An instance of the `Popup` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#popup)) to attach to this marker. If undefined or null, any popup set on this Marker instance is unset.
 
-Continuously called while a draggable marker is being dragged.
+#### `rotation`: number {#rotation}
 
-Parameters:
+Default: `0`
 
-- `event` - The pointer event.
-  + `event.lngLat` - The geo coordinates of the drag event, as `[lng, lat]`.
+The rotation angle of the marker in degrees, relative to its `rotationAlignment` setting. A positive value will rotate the marker clockwise.
 
-##### `onDragEnd` (Function)
+#### `rotationAlignment`: 'map' | 'viewport' | 'auto' {#rotationalignment}
 
-Called when a draggable marker is released at its final position. This is usually a good time to capture `event.lngLat` and update the marker's `longitude` and `latitude` props.
+Default: `'auto'`
 
-Parameters:
+- `map` aligns the `Marker`'s rotation relative to the map, maintaining a bearing as the map rotates.
+- `viewport` aligns the `Marker`'s rotation relative to the viewport, agnostic to map rotations.
+- `auto` is equivalent to `viewport`.
 
-- `event` - The pointer event.
-  + `event.lngLat` - The geo coordinates where the drag ended, as `[lng, lat]`.
+#### `style`: CSSProperties {#style}
 
-##### `captureScroll` (Boolean)
+CSS style override that applies to the marker's container.
 
-- default: `false`
+### Callbacks
 
-Stop propagation of mouse wheel event to the map component. Can be used to stop map from zooming when this component is scrolled.
+#### `onClick`: (evt: [MapEvent](./types.md#mapevent)) => void {#onclick}
 
-##### `captureDrag` (Boolean)
+Called when the marker is clicked on.
 
-- default: `true`
+#### `onDragStart`: (evt: [MarkerDragEvent](./types.md#markerdragevent)) => void {#ondragstart}
 
-Stop propagation of dragstart event to the map component. Can be used to stop map from panning when this component is dragged. Automatically true if `draggable` is `true`.
+Called when dragging starts, if `draggable` is `true`.
 
-##### `captureClick` (Boolean)
+#### `onDrag`: (evt: [MarkerDragEvent](./types.md#markerdragevent)) => void {#ondrag}
 
-- default: `true`
+Called while dragging, if `draggable` is `true`.
 
-Stop propagation of click event to the map component. Can be used to stop map from calling the `onClick` callback when this component is clicked.
+#### `onDragEnd`: (evt: [MarkerDragEvent](./types.md#markerdragevent)) => void {#ondragend}
 
-##### `captureDoubleClick` (Boolean)
+Called when dragging ends, if `draggable` is `true`.
 
-- default: `true`
 
-Stop propagation of dblclick event to the map component. Can be used to stop map from zooming when this component is double clicked.
+### Other Properties
 
-## Styling
+The properties in this section are not reactive. They are only used when the component first mounts.
 
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
+Any options supported by the `Marker` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#marker)), such as
+
+- `anchor`
+- `color`
+- `scale`
+- `clickTolerance`
+
+
+## Methods
+
+The underlying native `Marker` instance is accessible via a [React ref](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs) hook.
+You may use it to call any imperative methods:
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
+import * as React from 'react';
+import {useRef, useMemo, useCallback} from 'react';
+import Map, {Marker} from 'react-map-gl';
+import mapboxgl from 'mapbox-gl';
+
+function App() {
+  const markerRef = useRef<mapboxgl.Marker>();
+
+  const popup = useMemo(() => {
+    return mapboxgl.Popup().setText('Hello world!');
+  }, [])
+
+  const togglePopup = useCallback(() => {
+    markerRef.current?.togglePopup();
+  }, []);
+
+  return <>
+    <Map>
+      <Marker longitude={-122.4} latitude={37.8} color="red" popup={popup} ref={markerRef} />
+    </Map>
+    <button onClick={togglePopup}>Toggle popup</button>
+  </>;
+}
+```
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import {useRef, useMemo, useCallback} from 'react';
+import Map, {Marker} from 'react-map-gl/maplibre';
+import maplibregl from 'maplibre-gl';
+
+function App() {
+  const markerRef = useRef<maplibregl.Marker>();
+
+  const popup = useMemo(() => {
+    return maplibregl.Popup().setText('Hello world!');
+  }, [])
+
+  const togglePopup = useCallback(() => {
+    markerRef.current?.togglePopup();
+  }, []);
+
+  return <>
+    <Map>
+      <Marker longitude={-122.4} latitude={37.8} color="red" popup={popup} ref={markerRef} />
+    </Map>
+    <button onClick={togglePopup}>Toggle popup</button>
+  </>;
+}
+```
+
+  </TabItem>
+</Tabs>
 
 ## Source
 
-[marker.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/marker.js)
-
+[marker.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/marker.ts)

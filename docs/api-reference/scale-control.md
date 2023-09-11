@@ -1,45 +1,92 @@
-# Scale Control
+# ScaleControl
 
-![Since v5.2](https://img.shields.io/badge/since-v5.2-green)
+React component that wraps the base library's `ScaleControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#scalecontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#scalecontrol)).
 
-This is a React equivalent of Mapbox's [ScaleControl](https://docs.mapbox.com/mapbox-gl-js/api/#scalecontrol).
 
-```js
-import {Component} from 'react';
-import ReactMapGL, {ScaleControl} from 'react-map-gl';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-class Map extends Component {
-  render() {
-    const {viewport, updateViewport} = this.props;
-    return (
-      <ReactMapGL {...viewport} onViewportChange={updateViewport}>
-        <div style={{position: 'absolute', bottom: 100, left: 20}}>
-          <ScaleControl maxWidth={100} unit={"metric"}/>
-        </div>
-      </ReactMapGL>
-    );
-  }
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
+import * as React from 'react';
+import Map, {ScaleControl} from 'react-map-gl';
+
+function App() {
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    <ScaleControl />
+  </Map>;
 }
 ```
 
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import Map, {ScaleControl} from 'react-map-gl/maplibre';
+
+function App() {
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    <ScaleControl />
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ## Properties
 
-##### `maxWidth` (Number)
+### Reactive Properties
 
-- default: `100`
+#### `maxWidth`: string {#maxwidth}
+
+Default: `100`
 
 The maximum length of the scale control in pixels.
 
-##### `unit` (String)
+#### `style`: CSSProperties {#style}
 
-- default: `'metric'`
+CSS style override that applies to the control's container.
 
-Unit of the distance, one of `'imperial'`, `'metric'` or `'nautical'`.
+#### `unit`: 'imperial' | 'metric' | 'nautical' {#unit}
 
-## Styling
+Default: `'metric'`
 
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
+Unit of the distance.
+
+
+### Other Properties
+
+The properties in this section are not reactive. They are only used when the component first mounts.
+  
+#### `position`: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' {#position}
+
+Default: `'top-right'`
+
+Placement of the control relative to the map.
+
 
 ## Source
 
-[scale-control.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/scale-control.js)
+[scale-control.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/scale-control.ts)

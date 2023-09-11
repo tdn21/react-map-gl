@@ -1,137 +1,191 @@
-# Popup Control
+# Popup
 
-![Since v3.0](https://img.shields.io/badge/since-v3.0-green)
+React component that wraps the base library's `Popup` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#popup)).
 
-This is a React equivalent of Mapbox's [Popup Control](https://www.mapbox.com/mapbox-gl-js/api/#popup), which can be used to
-show tooltip popups with custom HTML content at specific locations on the map.
 
-```js
-import {Component} from 'react';
-import ReactMapGL, {Popup} from 'react-map-gl';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-class Map extends Component {
-  state = {
-    showPopup: true
-  };
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
 
-  render() {
-    const {showPopup} = this.state;
-    return (
-      <ReactMapGL latitude={37.78} longitude={-122.41} zoom={8}>
-        {showPopup && <Popup
-          latitude={37.78}
-          longitude={-122.41}
-          closeButton={true}
-          closeOnClick={false}
-          onClose={() => this.setState({showPopup: false})}
-          anchor="top" >
-          <div>You are here</div>
-        </Popup>}
-      </ReactMapGL>
-    );
-  }
+```tsx
+import * as React from 'react';
+import {useState} from 'react';
+import Map, {Popup} from 'react-map-gl';
+
+function App() {
+  const [showPopup, setShowPopup] = useState<boolean>(true);
+
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    {showPopup && (
+      <Popup longitude={-100} latitude={40}
+        anchor="bottom"
+        onClose={() => setShowPopup(false)}>
+        You are here
+      </Popup>)}
+  </Map>;
 }
 ```
 
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import {useState} from 'react';
+import Map, {Popup} from 'react-map-gl/maplibre';
+
+function App() {
+  const [showPopup, setShowPopup] = useState<boolean>(true);
+
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    {showPopup && (
+      <Popup longitude={-100} latitude={40}
+        anchor="bottom"
+        onClose={() => setShowPopup(false)}>
+        You are here
+      </Popup>)}
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ## Properties
 
-##### `latitude` (Number, required)
+### Reactive Properties
 
-Latitude of the anchor.
+#### `anchor`: 'center' | 'left' | 'right' | 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | undefined {#anchor}
 
-##### `longitude` (Number, required)
+A string indicating the part of the popup that should be positioned closest to the coordinate, set via `longitude` and `latitude`. 
+If unset, the anchor will be dynamically set to ensure the popup falls within the map container with a preference for `'bottom'`.
 
-Longitude of the anchor.
+#### `className`: string {#classname}
 
-##### `altitude` (Number)
+Space-separated CSS class names to add to popup container.
 
-- default: `0`
+#### `offset`: number | [PointLike](./types.md#pointlike) | Record\<string, [PointLike](./types.md#pointlike)\> {#offset}
 
-Altitude of the anchor.
+Default: `null`
 
-##### `offsetLeft` (Number)
+A pixel offset applied to the popup's location specified as:
 
-- default: `0`
+- a single number specifying a distance from the popup's location
+- a PointLike specifying a constant offset
+- an object of Points specifing an offset for each anchor position.
 
-Offset of the anchor from the left in pixels, negative number indicates left.
+Negative offsets indicate left and up.
 
-##### `offsetTop` (Number)
+#### `maxWidth`: string {#maxwidth}
 
-- default: `0`
+Default: `240px`
 
-Offset of the anchor from the top in pixels, negative number indicates up.
+A string that sets the CSS property of the popup's maximum width.
 
-##### `closeButton` (Boolean)
+#### `style`: CSSProperties {#style}
 
-- default: `true`
+CSS style override that applies to the popup's container.
 
-If `true`, a close button will appear in the top right corner of the popup.
+### Callbacks
 
-##### `closeOnClick` (Boolean)
+#### `onOpen`: (evt: [PopupEvent](./types.md#popupevent)) => void {#onopen}
 
-- default: `true`
+Called when the popup is opened.
 
-If `true`, the popup will closed when the map is clicked.
+#### `onClose`: (evt: [PopupEvent](./types.md#popupevent)) => void {#onclose}
 
-##### `tipSize` (Number)
-
-- default: `10`
-
-Size of the tip pointing to the coordinate.
-
-##### `anchor` (String)
-
-- default: `bottom`
-
-A string indicating the popup's position relative to the coordinate.
-Options are `top`, `bottom`, `left`, `right`, `top-left`, `top-right`, `bottom-left`, and `bottom-right`.
-
-##### `dynamicPosition` (Boolean)
-
-- default: `true`
-
-If `true`, the anchor will be dynamically adjusted to ensure the popup falls within the map container.
-
-##### `sortByDepth` (Boolean)
-
-- default: `false`
-
-If `true`, the order of the popups will be dynamically rearranged to ensure that the ones anchored closer to the camera are rendered on top. Useful when showing multiple popups in a tilted map.
-
-##### `onClose` (Function)
-
-Callback when the user closes the popup.
-
-##### `captureScroll` (Boolean)
-
-- default: `false`
-
-Stop propagation of mouse wheel event to the map component. Can be used to stop map from zooming when this component is scrolled.
-
-##### `captureDrag` (Boolean)
-
-- default: `true`
-
-Stop propagation of dragstart event to the map component. Can be used to stop map from panning when this component is dragged.
-
-##### `captureClick` (Boolean)
-
-- default: `true`
-
-Stop propagation of click event to the map component. Can be used to stop map from calling the `onClick` callback when this component is clicked.
-
-##### `captureDoubleClick` (Boolean)
-
-- default: `true`
-
-Stop propagation of dblclick event to the map component. Can be used to stop map from zooming when this component is double clicked.
+Called when the popup is closed by the user clicking on the close button or outside (if `closeOnClick: true`).
 
 
-## Styling
+### Other Properties
 
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
+The properties in this section are not reactive. They are only used when the component first mounts.
+
+Any options supported by the `Popup` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#popup) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#popup)), such as
+
+- `closeButton`
+- `closeOnClick`
+- `closeOnMove`
+- `focusAfterOpen`
+
+
+## Methods
+
+The underlying native `Popup` instance is accessible via a [React ref](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs) hook.
+You may use it to call any imperative methods:
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
+import * as React from 'react';
+import {useRef, useEffect} from 'react';
+import Map, {Popup} from 'react-map-gl';
+import mapboxgl from 'mapbox-gl';
+
+function App() {
+  const popupRef = useRef<mapboxgl.Popup>();
+
+  useEffect(() => {
+    popupRef.current?.trackPointer();
+  }, [popupRef.current])
+
+  return <Map>
+    <Popup longitude={-122.4} latitude={37.8} ref={popupRef} >
+      Tooltip
+    </Popup>
+  </Map>;
+}
+```
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import {useRef, useEffect} from 'react';
+import Map, {Popup} from 'react-map-gl/maplibre';
+import maplibregl from 'maplibre-gl';
+
+function App() {
+  const popupRef = useRef<maplibregl.Popup>();
+
+  useEffect(() => {
+    popupRef.current?.trackPointer();
+  }, [popupRef.current])
+
+  return <Map>
+    <Popup longitude={-122.4} latitude={37.8} ref={popupRef} >
+      Tooltip
+    </Popup>
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
 
 ## Source
 
-[popup.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/popup.js)
-
+[popup.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/popup.ts)

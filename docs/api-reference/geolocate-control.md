@@ -1,89 +1,166 @@
-# Geolocate Control
+# GeolocateControl
 
-![Since v4.1](https://img.shields.io/badge/since-v4.1-green)
+React component that wraps the base library's `GeolocateControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#geolocatecontrol)).
 
-This is a React equivalent of Mapbox's [GeolocateControl](https://www.mapbox.com/mapbox-gl-js/api/#geolocatecontrol).
 
-```js
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
 import * as React from 'react';
-import { Component } from "react";
-import ReactMapGL, {GeolocateControl} from "react-map-gl";
+import Map, {GeolocateControl} from 'react-map-gl';
 
-class Map extends Component {
-  state = {
-    viewport: {longitude: -122.45, latitude: 37.78, zoom: 14}
-  }
-
-  render() {
-    const {viewport} = this.state;
-    return (
-      <ReactMapGL {...viewport}
-        width="100vw"
-        height="100vh"
-        onViewportChange={viewport => this.setState({viewport})}>
-        <GeolocateControl
-          positionOptions={{enableHighAccuracy: true}}
-          trackUserLocation={true}
-        />
-      </ReactMapGL>
-    );
-  }
+function App() {
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    <GeolocateControl />
+  </Map>;
 }
 ```
 
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+```tsx
+import * as React from 'react';
+import Map, {GeolocateControl} from 'react-map-gl/maplibre';
+
+function App() {
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    <GeolocateControl />
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ## Properties
 
-Accepts all the options of [Mapbox GeolocatControl](https://docs.mapbox.com/mapbox-gl-js/api/#geolocatecontrol).
+### Reactive Properties
 
-##### `onViewportChange` (Function, optional)
+#### `style`: CSSProperties {#style}
 
-Callback when the user interaction with this control requests a viewport update. If provided, will be called instead of the containing [InteractiveMap](/docs/api-reference/interactive-map.md)'s `onViewportChange`.
+CSS style override that applies to the control's container.
 
-##### `onGeolocate` (Function, optional)
+### Callbacks
 
-Callback when Geolocation API position updates. It is called with a Geolocation API [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions) object.
+#### `onGeolocate`: (evt: [GeolocateResultEvent](./types.md#geolocateresultevent)) => void {#ongeolocate}
 
-##### `positionOptions` (Object)
+Called on each Geolocation API position update that returned as success.
 
-- default: `{enableHighAccuracy: false, timeout: 6000}` 
+#### `onError`: (evt: [GeolocateErrorEvent](./types.md#geolocateerrorevent)) => void {#onerror}
 
-A Geolocation API [PositionOptions](https://developer.mozilla.org/en-US/docs/Web/API/PositionOptions) object.
+Called on each Geolocation API position update that returned as an error.
 
-##### `fitBoundsOptions` (Object)
+#### `onOutOfMaxBounds`: (evt: [GeolocateResultEvent](./types.md#geolocateresultevent)) => void {#onoutofmaxbounds}
 
-- default: `{maxZoom: 15}` 
+Called on each Geolocation API position update that returned as success but user position is out of map `maxBounds`.
 
-A [fitBounds](https://docs.mapbox.com/mapbox-gl-js/api/#map#fitbounds) options object to use when the map is panned and zoomed to the user's location. The default is to use a  maxZoom of 15 to limit how far the map will zoom in for very accurate locations.
+#### `onTrackUserLocationStart`: (evt: [GeolocateEvent](./types.md#geolocateevent)) => void {#ontrackuserlocationstart}
 
-##### `trackUserLocation` (Boolean)
+Called when the GeolocateControl changes to the active lock state.
 
-- default: `false`
+#### `onTrackUserLocationEnd`: (evt: [GeolocateEvent](./types.md#geolocateevent)) => void {#ontrackuserlocationend}
 
-If true the Geolocate Control becomes a toggle button and when active the map will receive updates to the user's location as it changes.
-
-##### `showUserLocation` (Boolean)
-
-- default: `true`
-
-By default a dot will be shown on the map at the user's location. Set to false to disable.
-
-##### `style` (Object)
-
-A [React style](https://reactjs.org/docs/dom-elements.html#style) object applied to Geolocate control button.
-
-Check [`locate user`](https://github.com/uber/react-map-gl/tree/5.2-release/examples/locate-user/src/app.js) example for basic styling.
-
-##### `label` (String)
-
-- default: `Geolocate`
-
-Label applied to the Geolocate control button.
+Called when the GeolocateControl changes to the background state.
 
 
-## Styling
+### Other Properties
 
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
+The properties in this section are not reactive. They are only used when the component first mounts.
+
+Any options supported by the `GeolocateControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#geolocatecontrol)), such as
+
+- `positionOptions`
+- `fitBoundsOptions`
+- `trackUserLocation`
+- `showAccuracyCircle`
+- `showUserLocation`
+
+Plus the following:
+
+#### `position`: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' {#position}
+
+Default: `'bottom-right'`
+
+Placement of the control relative to the map.
+
+
+## Methods
+
+The underlying native `GeolocateControl` instance is accessible via a [React ref](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs) hook.
+You may use it to call any imperative methods:
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
+import * as React from 'react';
+import {useRef, useEffect} from 'react';
+import Map, {GeolocateControl} from 'react-map-gl';
+import type mapboxgl from 'mapbox-gl';
+
+function App() {
+  const geoControlRef = useRef<mapboxgl.GeolocateControl>();
+
+  useEffect(() => {
+    // Activate as soon as the control is loaded
+    geoControlRef.current?.trigger();
+  }, [geoControlRef.current]);
+
+  return <Map>
+    <GeolocateControl ref={geoControlRef} />
+  </Map>;
+}
+```
+
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import {useRef, useEffect} from 'react';
+import Map, {GeolocateControl} from 'react-map-gl/maplibre';
+import type maplibregl from 'maplibre-gl';
+
+function App() {
+  const geoControlRef = useRef<maplibregl.GeolocateControl>();
+
+  useEffect(() => {
+    // Activate as soon as the control is loaded
+    geoControlRef.current?.trigger();
+  }, [geoControlRef.current]);
+
+  return <Map>
+    <GeolocateControl ref={geoControlRef} />
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
 
 ## Source
 
-[geolocate-control.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/geolocate-control.js)
+[geolocate-control.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/geolocate-control.ts)

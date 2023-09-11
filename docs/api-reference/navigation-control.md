@@ -1,101 +1,86 @@
-# Navigation Control
+# NavigationControl
 
-![Since v3.0](https://img.shields.io/badge/since-v3.0-green)
+React component that wraps the base library's `NavigationControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#navigationcontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#navigationcontrol)).
 
-This is a React equivalent of Mapbox's [NavigationControl](https://www.mapbox.com/mapbox-gl-js/api/#navigationcontrol),
-which provides zoom buttons and a compass button.
 
-```js
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="map-library">
+  <TabItem value="mapbox" label="Mapbox">
+
+```tsx
 import * as React from 'react';
-import {Component} from 'react';
-import ReactMapGL, {NavigationControl} from 'react-map-gl';
+import Map, {NavigationControl} from 'react-map-gl';
 
-class Map extends Component {
-  state = {
-    viewport: {longitude: -122.45, latitude: 37.78, zoom: 12}
-  };
-
-  render() {
-    const {viewport} = this.state;
-    return (
-      <ReactMapGL {...viewport}
-        width="100vw"
-        height="100vh"
-        onViewportChange={viewport => this.setState({viewport})}>
-        <div style={{position: 'absolute', right: 0}}>
-          <NavigationControl />
-        </div>
-      </ReactMapGL>
-    );
-  }
+function App() {
+  return <Map
+    mapboxAccessToken="<Mapbox access token>"
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="mapbox://styles/mapbox/streets-v9"
+  >
+    <NavigationControl />
+  </Map>;
 }
 ```
 
+  </TabItem>
+  <TabItem value="maplibre" label="Maplibre">
+
+
+```tsx
+import * as React from 'react';
+import Map, {NavigationControl} from 'react-map-gl/maplibre';
+
+function App() {
+  return <Map
+    initialViewState={{
+      longitude: -100,
+      latitude: 40,
+      zoom: 3.5
+    }}
+    mapStyle="https://api.maptiler.com/maps/streets/style.json?key=get_your_own_key"
+  >
+    <NavigationControl />
+  </Map>;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
 ## Properties
 
-##### `onViewportChange` (Function)
+### Reactive Properties
 
-Callback when the user interaction with this control requests a viewport update. If provided, will be called instead of the containing [InteractiveMap](/docs/api-reference/interactive-map.md)'s `onViewportChange`.
+#### `style`: CSSProperties {#style}
 
-##### `showCompass` (Boolean)
+CSS style override that applies to the control's container.
 
-- default: `true`
+### Other Properties
 
-Show or hide the compass button
+The properties in this section are not reactive. They are only used when the component first mounts.
 
-##### `showZoom` (Boolean)
+Any options supported by the `NavigationControl` class ([Mapbox](https://docs.mapbox.com/mapbox-gl-js/api/markers/#navigationcontrol) | [Maplibre](https://maplibre.org/maplibre-gl-js-docs/api/markers/#navigationcontrol)), such as
 
-- default: `true`
+- `showCompass`
+- `showZoom`
+- `visualizePitch`
 
-Show or hide the zoom buttons
+Plus the following:
 
-##### `captureScroll` (Boolean)
+#### `position`: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' {#position}
 
-- default: `false`
+Default: `'top-right'`
 
-Stop propagation of mouse wheel event to the map component. Can be used to stop map from zooming when this component is scrolled.
+Placement of the control relative to the map.
 
-##### `captureDrag` (Boolean)
-
-- default: `true`
-
-Stop propagation of dragstart event to the map component. Can be used to stop map from panning when this component is dragged.
-
-##### `captureClick` (Boolean)
-
-- default: `true`
-
-Stop propagation of click event to the map component. Can be used to stop map from calling the `onClick` callback when this component is clicked.
-
-##### `captureDoubleClick` (Boolean)
-
-- default: `true`
-
-Stop propagation of dblclick event to the map component. Can be used to stop map from zooming when this component is double clicked.
-
-##### `zoomInLabel` (String)
-
-- default: `Zoom In`
-
-Label applied to the zoom in control button.
-
-##### `zoomOutLabel` (String)
-
-- default: `Zoom Out`
-
-Label applied to the zoom out control button.
-
-##### `compassLabel` (String)
-
-- default: `Reset North`
-
-Label applied to the compass control button.
-
-## Styling
-
-Like its Mapbox counterpart, this control relies on the mapbox-gl stylesheet to work properly. Make sure to add the stylesheet to your page.
 
 ## Source
 
-[navigation-control.js](https://github.com/uber/react-map-gl/tree/5.2-release/src/components/navigation-control.js)
-
+[navigation-control.ts](https://github.com/visgl/react-map-gl/tree/7.0-release/src/components/navigation-control.ts)

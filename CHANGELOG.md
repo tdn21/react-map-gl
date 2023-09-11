@@ -1,6 +1,188 @@
 # CHANGELOG
 
+# Version 7.1
+
+## 7.1.0-beta.3 (Jun 22, 2023)
+
+- Remap event types (#2207)
+- Restore fog, light and terrain types on MapProps (#2206)
+
+## 7.1.0-beta.2 (Jun 14, 2023)
+
+- Make source prop of Layer optional (#2200)
+- Fix maplibre-gl peerDependencies typo (#2197)
+
+## 7.1.0-beta.1 (Jun 5, 2023)
+
+- Add ref forwarding to Marker and Popup (#2191)
+- Split exports into separate endpoints (#2178)
+- Make mapbox-gl an optional dependency (#2175)
+- Remove defaultProps and displayName (#2173)
+
+
+# Version 7.0
+
+## 7.0.0 (Feb 4, 2022)
+
+v7 is a complete rewrite of the library. It addresses many long-standing issues in v5 and v6 limited by legacy architecture decisions. The most notable results of this redesign are:
+
+- Performance: minimize the overhead of React, offer the same fast and smooth interaction as the native library
+- Lightweight: the ESM build size is reduced from 219k to 57k
+- Predictability: Components behave the same as their mapbox counterparts. Props are mapped 1:1 from the native options wherever appropriate. Almost all imperative APIs (`flyTo`, `fitBounds` etc.) can now be called directly without breaking the React binding.
+- Compatibility: first and third-party plugins! Directly use [mapbox-gl-draw](https://github.com/visgl/react-map-gl/tree/7.0-release/examples/draw-polygon), [mapbox-gl-geocoder](https://github.com/visgl/react-map-gl/tree/7.0-release/examples/geocoder), to name a few.
+- TypeScript compliant: the code base is now entirely written in TypeScript, and all types can be [imported](/docs/api-reference/types.md).
+
+Visit the [upgrade guide](https://visgl.github.io/react-map-gl/docs/upgrade-guide) if you are trying to upgrade from v5 and v6.
+
+## 7.0.0-beta.1 (Jan 26, 2022)
+
+- Add mapLib API (#1703)
+- Support inline styling for all components (#1702)
+- Refactor Mapbox class (#1701)
+
+## 7.0.0-alpha.7 (Jan 17, 2022)
+
+- Improve typing (#1695)
+- [v7] Fix popup className update in mapbox v1/maplibre (#1694)
+
+## 7.0.0-alpha.6 (Jan 9, 2022)
+
+- [v7] Fix double controls in strict mode (#1678)
+-  [v7] Fix AttributionControl prop typo (#1679)
+
+## 7.0.0-alpha.5 (Jan 6, 2022)
+
+- [v7] Handle unmount order (#1676)
+- [v7] Fix synchronization during transition (#1675)
+- [v7] Update MapRef (#1674)
+- [v7] Bug fixes (#1673)
+
+## 7.0.0-alpha.4 (Jan 4, 2022)
+
+- [v7] Fix resize synchronization (#1670)
+- [v7] Add fog, light, terrain props (#1669)
+- [v7] support global settings with MapProps (#1668)
+
+## 7.0.0-alpha.3 (Jan 3, 2022)
+
+- [v7] Clean up typings and expose more utility types (#1667)
+- Drop flow types support (#1666)
+
+## 7.0.0-alpha.2 (Jan 2, 2022)
+
+- Update `@types/mapbox-gl` dependency
+
+## 7.0.0-alpha.1 (Jan 2, 2022)
+
+- [v7] utility hooks (#1663)
+- [v7] Add Layer and Source (#1657)
+- [v7] Control components (#1656)
+- [v7] Marker and Popup (#1655)
+- [v7] Map component (#1652)
+- Typescript dev setup
+
+# Version 6.1
+
+## 6.1.0-beta.1 (Jan 22, 2021)
+
+- Add eventRecognizerOptions prop (#1302)
+- Controller inertia (#1303)
+- Misc component bug fixes (#1301)
+- Align control component APIs (#1297)
+- Minor fixes to GeolocateControl (#1296)
+- Add AttributionControl (#1295)
+- Smooth zoom on scroll (#1288)
+- Defer onInteractionStateChange callback (#1287)
+- Prevent overlay container from scrolling on focus (#1286)
+- Fix no token warning message (#1289)
+
+## 6.1.0-alpha.1 (Jan 5, 2021)
+
+- Clean up and document MapContext and useMapControl APIs (#1278)
+- Fix React error when transition is triggered (#1277)
+- Bump mapbox-gl (#1279)
+- Refactor StaticMap and InteractiveMap into functional components (#1271)
+- Resolve prettier conflict (#1274)
+- Migrate to TypeScript: initial commit (#1268)
+- Fix bug where Source does not render its children on first render (#1250)
+- Move controls to functional component (#1242)(#1243)(#1244)(#1245)
+- Elevate map to top-level MapContext (#1233)
+- Replace react resizer with ResizeObserver (#1174)
+
+# Version 6.0
+
+## Version 6.0.2 (Dec 21, 2020)
+
+- Add support for 'sky' layer type to Layer component (#1270)
+
+## Version 6.0.1 (Dec 17, 2020)
+
+- Drop a breaking change intended for the next minor release
+
+## Version 6.0.0 (Dec 16, 2020)
+
+- mapbox-gl@2.0.0 (#1263)
+- Change `maxPitch` to `85`
+
 # Version 5.2
+
+## 5.2.11 (Dec 11, 2020)
+
+- Safe check layer props (#1225)
+- Fix dynamic position offscreen (#1253)
+- Fix dynamic position tests (#1255)
+
+## 5.2.10 (Nov 5, 2020)
+
+- Use valid fill-extrusion value for layer type (#1199)
+- Add capturePointerMove to NavigationControl (#1215)
+- Fix user location dot offset (#1220)
+- Safety check before calling cloneElement (#1219)
+
+## 5.2.9 (Oct 7, 2020)
+
+- Fix for layout and paint diffing logic (#1194)
+- Add types for layer type and source-layer (#1192)
+- Support updating vector source (#1196)
+- Fix IE compatibility (#1195)
+- Add label prop to FullscreenControl (#1197)
+
+## 5.2.8 (Sep 1, 2020)
+
+- Always rerender overlay after map initialization (#1172)
+
+## 5.2.7 (June 5, 2020)
+
+- NavigationControl: fall back to the latest UI version (#1124)
+- [Geolocate] fix auto when location blocked (#1126)
+
+## 5.2.6 (June 4, 2020)
+
+- [Geolocate] Auto trigger when component loads (#1116)
+- Check if map style is loaded before removing source or layer (#1123)
+
+## 5.2.5 (Apr 20, 2020)
+
+- Migrate to import * as React from 'react' (#1038)
+- Fix issue where translate by partial pixels causes blurry rendering (#1039)
+- Bump dev tools (#1040)
+- Correct interaction state on double click (#1081)
+- Fix edge case in transitionDuration:auto (#1080)
+
+## 5.2.3 (Feb 10, 2020)
+
+- Sanity check in source/layer update (#1022)
+
+## 5.2.2 (Feb 3, 2020)
+
+- Bump mjolnir.js dependency (#990)
+- Re-export setRTLTextPlugin plugin (#1010)
+- Fix GeolocateControl error when used with StaticMap (#1012)
+- Fix issue where adding popup enables double click recognizer (#1013)
+
+## 5.2.1 (Jan 12, 2020)
+
+- Deep compare source props (#985)
 
 ## 5.2.0 (Jan 6, 2020)
 
@@ -402,7 +584,7 @@ Add babel transform-runtime to es5 build for IE11 support.
 
 ## Version 3.0.0 (July 27, 2017)
 
-This is a major release of the library. For more information, please see [What's new](https://github.com/uber/react-map-gl/blob/3.0-release/docs/whats-new.md) in latest documentation.
+This is a major release of the library. For more information, please see [What's new](https://github.com/visgl/react-map-gl/blob/3.0-release/docs/whats-new.md) in latest documentation.
 
 ## Version 2.0.2 (Feb 09, 2017)
 
@@ -523,7 +705,7 @@ This is a major release of the library. For more information, please see [What's
 **Limitations:** The existing overlays (HTMLOverlay, CanvasOverlay,
   SVGOverlay etc) do not currently support perspective mode.
   For a set of overlays that do support perspective mode, see
-  [deck.gl](https://github.com/uber/deck.gl)
+  [deck.gl](https://github.com/visgl/deck.gl)
 
 Note: The map state reported by onViewportChanged may now contain additional
 state fields (tracking not only pitch and bearing, but also transient

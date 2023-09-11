@@ -1,55 +1,43 @@
-{
-  "id": "table-of-contents",
-  "chapters": [
-    {
-      "title": "Introduction",
-      "entries": [
-        { "entry": "docs" },
-        { "entry": "docs/whats-new" },
-        { "entry": "docs/upgrade-guide" },
-        { "entry": "docs/developer-guide" }
-      ]
-    },
-    {
-      "title": "Getting Started",
-      "entries": [
-        { "entry": "docs/get-started/get-started" },
-        { "entry": "docs/get-started/mapbox-tokens" },
-        { "entry": "docs/get-started/state-management" },
-        { "entry": "docs/get-started/adding-custom-data" }
-      ]
-    },
-    {
-      "title": "Advanced",
-      "entries": [
-        { "entry": "docs/advanced/custom-components" },
-        { "entry": "docs/advanced/custom-map-controller" },
-        { "entry": "docs/advanced/custom-overlays" },
-        { "entry": "docs/advanced/viewport-transition" }
-      ]
-    },
-    {
-      "title": "API Reference",
-      "entries": [
-        { "entry": "docs/api-reference/canvas-overlay" },
-        { "entry": "docs/api-reference/fly-to-interpolator" },
-        { "entry": "docs/api-reference/html-overlay" },
-        { "entry": "docs/api-reference/interactive-map" },
-        { "entry": "docs/api-reference/layer" },
-        { "entry": "docs/api-reference/linear-interpolator" },
-        { "entry": "docs/api-reference/marker" },
-        { "entry": "docs/api-reference/map-controller" },
-        { "entry": "docs/api-reference/navigation-control" },
-        { "entry": "docs/api-reference/fullscreen-control" },
-        { "entry": "docs/api-reference/geolocate-control" },
-        { "entry": "docs/api-reference/pointer-event" },
-        { "entry": "docs/api-reference/popup" },
-        { "entry": "docs/api-reference/scale-control" },
-        { "entry": "docs/api-reference/source" },
-        { "entry": "docs/api-reference/static-map" },
-        { "entry": "docs/api-reference/svg-overlay" },
-        { "entry": "docs/api-reference/web-mercator-viewport" }
-      ]
-    }
-  ]
-}
+[
+  {
+    "type": "category",
+    "label": "Overview",
+    "items": [
+      "README",
+      "whats-new",
+      "upgrade-guide",
+      "contributing"
+    ]
+  },
+  {
+    "type": "category",
+    "label": "Developer Guide",
+    "items": [
+      "get-started/get-started",
+      "get-started/mapbox-tokens",
+      "get-started/state-management",
+      "get-started/adding-custom-data",
+      "get-started/tips-and-tricks"
+    ]
+  },
+  {
+    "type": "category",
+    "label": "API Reference",
+    "items": [
+      "api-reference/map",
+      "api-reference/attribution-control",
+      "api-reference/fullscreen-control",
+      "api-reference/geolocate-control",
+      "api-reference/layer",
+      "api-reference/map-provider",
+      "api-reference/marker",
+      "api-reference/navigation-control",
+      "api-reference/popup",
+      "api-reference/scale-control",
+      "api-reference/source",
+      "api-reference/use-control",
+      "api-reference/use-map",
+      "api-reference/types"
+    ]
+  }
+]
